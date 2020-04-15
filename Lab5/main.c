@@ -166,6 +166,7 @@ int AppleChek(COORD* apple, SNAKE* head)
 	int flag = 1;
 	while (1)
 	{
+		flag = 1;
 		SNAKE* COP = head;
 		while (COP->next != 0)
 		{
