@@ -58,13 +58,21 @@ void DelLast(COORD* end)
 	gotoxy(0, size_ + 1);
 }
 
-void addApple(COORD* apple)
+void addApple(COORD* apple,SNAKE* head)
 {
 	apple->X = rand() % (size_-1) + 1;
 	apple->Y = rand() % (size_-1) + 1;
 	gotoxy(apple->X, apple->Y);
-	printf("@");
-	gotoxy(0, size_ + 1);
+	if (AppleChek(apple, head) == 1)
+	{
+		printf("@");
+		gotoxy(0, size_ + 1);
+	}
+	else
+	{
+		addApple(apple, head);
+	}
+	
 }
 
 void addTail(SNAKE* head, COORD end)
@@ -157,14 +165,27 @@ void GameOver(SNAKE* head)
 		
 }
 
+int AppleChek(COORD* apple,SNAKE* head)
+{
+	while (head->next != 0)
+	{
+		if (apple->X == head->next->coord.X && apple->Y == head->next->coord.Y)
+		{
+			return 0;
+		}
+		head = head->next;
+	}
+	return 1;
+}
+
 int main()
 {
 	srand(time(NULL));
 	size_ = 20;
 	//int n = 20;
-	COORD apple;
+	
 	field(size_);
-	addApple(&apple);
+	
 
 
 	SNAKE* head = (SNAKE*)malloc(sizeof(SNAKE));
@@ -172,6 +193,9 @@ int main()
 	head->previous = 0;
 	head->coord.X = rand() % (size_ - 1) + 1;
 	head->coord.Y = rand() % (size_ - 1) + 1;
+
+	COORD apple;
+	addApple(&apple,head);
 
 	COORD end;
 
@@ -197,15 +221,15 @@ int main()
 		{
 			
 			addTail(head, end);
-			addApple(&apple);	
+			addApple(&apple,head);	
 			
 		}
 		FindEnd(&end, head);
 		
 		
-		gotoxy(0, size_ + 2);
-		printf("%d %d\n", head->coord.X, head->coord.Y);
-		printf("%d %d", end.X, end.Y);
+		//gotoxy(0, size_ + 2);
+		//printf("%d %d\n", head->coord.X, head->coord.Y);
+		//printf("%d %d", end.X, end.Y);
 		//printf("%d %d\n", apple.X, apple.Y);		
 		
 		if (_kbhit)
