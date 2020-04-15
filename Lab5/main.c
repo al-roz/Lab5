@@ -63,16 +63,12 @@ void addApple(COORD* apple,SNAKE* head)
 	apple->X = rand() % (size_-1) + 1;
 	apple->Y = rand() % (size_-1) + 1;
 	gotoxy(apple->X, apple->Y);
-	if (AppleChek(apple, head) == 1)
-	{
-		printf("@");
-		gotoxy(0, size_ + 1);
-	}
-	else
-	{
-		addApple(apple, head);
-	}
+	AppleChek(apple, head);
 	
+	printf("@");
+	gotoxy(0, size_ + 1);
+	
+
 }
 
 void addTail(SNAKE* head, COORD end)
@@ -165,17 +161,26 @@ void GameOver(SNAKE* head)
 		
 }
 
-int AppleChek(COORD* apple,SNAKE* head)
+int AppleChek(COORD* apple, SNAKE* head)
 {
-	while (head->next != 0)
+	int flag = 1;
+	while (1)
 	{
-		if (apple->X == head->next->coord.X && apple->Y == head->next->coord.Y)
+		SNAKE* COP = head;
+		while (COP->next != 0)
 		{
-			return 0;
+			if (apple->X == COP->next->coord.X && apple->Y == COP->next->coord.Y)
+			{
+				apple->X = rand() % (size_ - 1) + 1;
+				apple->Y = rand() % (size_ - 1) + 1;
+				flag = 0;
+				break;
+			}
+			COP = COP->next;
 		}
-		head = head->next;
+		if (flag == 1) break;		
 	}
-	return 1;
+	
 }
 
 int main()
